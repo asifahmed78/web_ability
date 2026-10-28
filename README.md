@@ -2,7 +2,7 @@
 
 **WebAbility is an open-source accessibility-testing project focused on real website journeys.** It aims to help developers understand not only which accessibility issues appear on a page, but where those issues can block someone from completing a task.
 
-> **Status: early foundation.** This repository is being converted from its former Trust Exchange website to WebAbility. The landing page and planning docs are the initial foundation. The journey runner, browser automation, accessibility-engine integration, reporting pipeline, and automated tests are **not implemented yet**. This repository does not currently scan websites.
+> **Status: early foundation.** The repository has been reset on `main` from its former Trust Exchange website to a WebAbility landing page and planning documentation. The journey runner, browser automation, accessibility-engine integration, reporting pipeline, and automated tests are **not implemented yet**. This repository does not currently scan websites.
 
 ## Why WebAbility?
 
