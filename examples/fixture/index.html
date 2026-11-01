@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WebAbility demo checkout</title>
+    <style>
+      body { max-width: 42rem; margin: 4rem auto; padding: 0 1.25rem; color: #17231f; font: 1rem/1.6 system-ui, sans-serif; }
+      form { display: grid; gap: 1rem; max-width: 28rem; }
+      label { font-weight: 650; }
+      input { padding: .8rem; border: 1px solid #66756b; border-radius: .4rem; font: inherit; }
+      button { width: fit-content; padding: .8rem 1rem; border: 0; border-radius: .4rem; background: #176b4d; color: white; font: inherit; cursor: pointer; }
+      [role=status] { margin-top: 1rem; padding: 1rem; background: #edf1e9; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Demo checkout</h1>
+      <p>This local fixture is intentionally small. The icon-only submit button is an example accessibility issue for WebAbility to detect.</p>
+      <form id="checkout-form">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" required>
+        <button type="submit" aria-label="">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M4 12h15m-6-6 6 6-6 6"/></svg>
+        </button>
+      </form>
+      <p id="confirmation" data-testid="confirmation" role="status" hidden>Checkout details received.</p>
+    </main>
+    <script>
+      document.querySelector("#checkout-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        document.querySelector("#confirmation").hidden = false;
+      });
+    </script>
+  </body>
+</html>
