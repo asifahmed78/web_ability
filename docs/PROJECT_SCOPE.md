@@ -1,7 +1,7 @@
 # WebAbility — Project Scope
 
 ## Product
-WebAbility is an open-source, journey-first accessibility testing tool. It runs browser journeys and connects automated accessibility findings to the exact task step where they appear.
+WebAbility is a journey-first accessibility testing tool. It runs browser journeys and connects automated accessibility findings to the exact task step where they appear.
 
 ## Problem
 Page-level audits can list violations, but developers still need to connect issues to tasks, reproduce them, and prioritize fixes. WebAbility adds journey context: link findings to a named task and the step where they were observed.
@@ -18,23 +18,27 @@ Page-level audits can list violations, but developers still need to connect issu
 3. Record findings with the journey step and URL.
 4. Compare reports across runs after the report format stabilizes.
 
-## Initial scope
-- Typed, validated journey definitions
-- Local browser runner using Playwright
-- axe-core integration behind a scanner adapter
+## Implemented in the current foundation
+- Typed, validated journey definitions with execution limits
+- Local browser runner using Playwright Chromium
+- axe-core scans after each journey step
 - Normalized violations and incomplete/manual-review results
-- JSON output and readable console summary
-- Unit and integration tests using local fixtures
-- Clear safety and privacy boundaries
+- Keyboard actions and explicit keyboard focus assertions
+- JSON reports for automation and standalone HTML reports for review
+- Local checkout fixture and browser integration coverage
+- CI workflow for lint, typecheck, tests, and build
 
-## Out of scope initially
+## Explicitly out of scope for this early release
 Automated WCAG/legal certification, replacing human or screen-reader testing, auto-editing source code, remote scanning, production credentials or real transactions, AI fixes, hosted dashboards, and historical analytics before the core runner is reliable.
 
-## First milestone success criteria
-A sample journey validates; a local fixture runs; a known issue is associated with a journey step; runner failures are distinguishable from completed scans; tests cover validation and execution; docs state limitations.
+## Current limitations
+- Targets are restricted to localhost / loopback addresses and same-origin navigation.
+- Keyboard assertions verify explicitly declared focus expectations; they do not prove complete keyboard accessibility.
+- axe-core incomplete results require human review.
+- The project is an early developer tool, not a certification product.
 
-## Current status
-The first local CLI foundation is implemented on the development branch: validated JSON journeys, Playwright Chromium execution, axe-core checks, step-level JSON reporting, a local checkout fixture, schema tests, and a CI workflow. Runner integration tests, report stability tests, and expanded keyboard assertions remain in progress. The Next.js site remains the project landing page.
+## Next milestone
+Improve failure recovery and cancellation, add CI annotations and report filtering, expand keyboard interaction coverage, and establish a stable report contract.
 
 ## Terms
 - **Journey:** named sequence of browser actions and expected outcomes.
