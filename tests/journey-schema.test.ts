@@ -26,6 +26,11 @@ test("rejects URL credentials", () => {
   assert.throws(() => parseJourney({ ...validJourney, baseUrl: "http://user:secret@localhost:3000" }));
 });
 
+test("rejects query strings and fragments in the target URL", () => {
+  assert.throws(() => parseJourney({ ...validJourney, baseUrl: "http://localhost:3000/?token=secret" }));
+  assert.throws(() => parseJourney({ ...validJourney, baseUrl: "http://localhost:3000/#private" }));
+});
+
 test("rejects unsupported keyboard keys", () => {
   assert.throws(() => parseJourney({
     ...validJourney,
