@@ -102,7 +102,8 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
   const startedAt = new Date().toISOString();
   const started = Date.now();
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  const context = await browser.newContext();
+  const page = await context.newPage();
   const steps: StepResult[] = [];
 
   try {
@@ -138,6 +139,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
       }
     }
   } finally {
+    await context.close();
     await browser.close();
   }
 
