@@ -35,6 +35,9 @@ async function main(): Promise<void> {
       for (const finding of step.violations) {
         console.log(`  [${finding.impact ?? "unknown"}] ${finding.id}: ${finding.help}`);
       }
+      for (const item of step.manualReview) {
+        console.log(`  [manual review] ${item.id}: ${item.help}`);
+      }
       if (step.error) console.error(`  ${step.error}`);
     }
 
