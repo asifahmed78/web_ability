@@ -24,7 +24,7 @@ export default function Home() {
           <a className="button primary" href="https://github.com/asifahmed78/web_ability">Explore the project <span aria-hidden="true">↗</span></a>
           <a className="button secondary" href="#quickstart">Run the demo</a>
         </div>
-        <aside className="status-note"><strong>Current status:</strong> the first local CLI runner is implemented with Playwright, axe-core, JSON reports, a demo checkout fixture, and schema tests. Remote scanning and full keyboard journey assertions are not supported yet.</aside>
+        <aside className="status-note"><strong>Current status:</strong> the local CLI runner supports Playwright journeys, axe-core scans, JSON and HTML reports, keyboard focus assertions, and browser integration tests. Remote scanning is not supported.</aside>
       </section>
       <section className="section journey-section" id="approach" aria-labelledby="approach-title">
         <div className="section-heading">
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
       </section>
       <section className="status-section" id="status" aria-labelledby="status-title">
-        <div><p className="eyebrow">BUILDING IN THE OPEN</p><h2 id="status-title">A working foundation. A bigger roadmap.</h2><p>The local runner is the first step. Next: stronger keyboard assertions, integration tests, richer reports, and CI annotations.</p></div>
+        <div><p className="eyebrow">BUILDING IN THE OPEN</p><h2 id="status-title">A working foundation. A bigger roadmap.</h2><p>The local runner is the first step. Next: richer CI annotations, cancellation and recovery, additional keyboard and screen-reader workflows, and carefully reviewed remote testing.</p></div>
         <a className="button light" href="https://github.com/asifahmed78/web_ability/blob/main/docs/ROADMAP.md">Read the roadmap <span aria-hidden="true">↗</span></a>
       </section>
       <footer className="site-footer">
