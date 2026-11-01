@@ -53,7 +53,7 @@ export default function Home() {
           <pre><code>npm run fixture</code></pre>
           <span className="terminal-label">TERMINAL 2 · RUN THE JOURNEY</span>
           <pre><code>npm run webability -- run examples/checkout.journey.json --out report.json</code></pre>
-          <a href="https://github.com/asifahmed78/web_ability/blob/feat/journey-runner-foundation/docs/CLI.md">Read the CLI guide <span aria-hidden="true">↗</span></a>
+          <a href="https://github.com/asifahmed78/web_ability/blob/main/docs/CLI.md">Read the CLI guide <span aria-hidden="true">↗</span></a>
         </div>
       </section>
       <section className="section example-section" aria-labelledby="example-title">
@@ -71,7 +71,7 @@ export default function Home() {
       </section>
       <section className="status-section" id="status" aria-labelledby="status-title">
         <div><p className="eyebrow">BUILDING IN THE OPEN</p><h2 id="status-title">A working foundation. A bigger roadmap.</h2><p>The local runner is the first step. Next: stronger keyboard assertions, integration tests, richer reports, and CI annotations.</p></div>
-        <a className="button light" href="https://github.com/asifahmed78/web_ability/blob/feat/journey-runner-foundation/docs/ROADMAP.md">Read the roadmap <span aria-hidden="true">↗</span></a>
+        <a className="button light" href="https://github.com/asifahmed78/web_ability/blob/main/docs/ROADMAP.md">Read the roadmap <span aria-hidden="true">↗</span></a>
       </section>
       <footer className="site-footer">
         <a className="wordmark" href="/"><span className="brand-mark" aria-hidden="true">W</span>WebAbility</a>
