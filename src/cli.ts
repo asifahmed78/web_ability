@@ -43,7 +43,7 @@ async function main(): Promise<void> {
       console.log(`\nJSON report written to ${resolve(outputPath)}`);
     }
 
-    console.log(`\n${report.summary.passedSteps}/${report.summary.steps} steps passed · ${report.summary.violations} accessibility rule violations`);
+    console.log(`\n${report.summary.passedSteps}/${report.summary.steps} steps passed · ${report.summary.violations} accessibility rule violations · ${report.summary.manualReview} items need manual review`);
     if (report.status === "failed" || report.summary.violations > 0) process.exitCode = 1;
   } catch (error) {
     if (error instanceof ZodError) {
