@@ -2,7 +2,7 @@
 
 **WebAbility is an open-source, journey-first accessibility testing tool.** It runs browser journeys against a local website and connects axe-core findings to the exact task step where they appear.
 
-> **Status: early development.** The repository now includes an initial local CLI runner, a validated journey format, Playwright browser execution, axe-core scans, JSON reports, a runnable demo fixture, schema tests, and CI checks. The runner is deliberately local-only. It is not a hosted scanner, a WCAG certification tool, or a replacement for manual testing.
+> **Status: early development.** The repository includes a local CLI runner, validated journey format, Playwright execution, axe-core scans, JSON and HTML reports, keyboard focus assertions, a runnable demo fixture, integration tests, and CI checks. The runner is deliberately local-only. It is not a hosted scanner, a WCAG certification tool, or a replacement for manual testing.
 
 ## Why WebAbility?
 
@@ -32,7 +32,7 @@ npm run fixture
 In terminal 2, run the sample journey:
 
 ```bash
-npm run webability -- run examples/checkout.journey.json --out report.json
+npm run webability -- run examples/checkout.journey.json --out report.json --html report.html
 ```
 
 The demo intentionally contains an icon-only submit button with no accessible name. The report should associate the resulting axe-core finding with the checkout journey step. The command exits with a non-zero code when a step fails or an accessibility violation is found.
@@ -46,16 +46,15 @@ The demo intentionally contains an icon-only submit button with no accessible na
 | `fill` | Enter a value into a form control |
 | `press` | Send an allowlisted keyboard key |
 | `expect-visible` | Wait for an element to become visible |
+| `expect-focused` | Assert that a specific element received keyboard focus |
 
-Journeys are JSON files validated with Zod before the browser starts. The current limits are 30 steps and a 500–30,000 ms step timeout. See [CLI usage and journey format](docs/CLI.md).
+Use `press` plus `expect-focused` to describe and verify keyboard focus transitions. See [CLI usage and journey format](docs/CLI.md).
 
-## What the report contains
+## Reports
 
-- Journey name, target, start time, and total duration.
-- Per-step pass/fail status, URL, and duration.
-- axe-core rule IDs, impact, help links, target selectors, and failure summaries.
-- Incomplete axe checks separated into a manual-review list.
-- A versioned JSON structure suitable for CI processing.
+- JSON output is designed for CI and other tools.
+- HTML output is a standalone report for human review.
+- Each step includes pass/fail status, URL, duration, axe violations, and manual-review checks.
 
 A zero-violation report does not prove a site is accessible. Automated checks cover only a subset of accessibility requirements; manual keyboard, screen-reader, and human testing remain essential.
 
@@ -72,7 +71,7 @@ npm test
 npm run build
 ```
 
-To run the demo fixture and CLI locally, see [docs/CLI.md](docs/CLI.md).
+Tests include schema validation, a real Chromium keyboard-focus journey, axe finding detection, and HTML report rendering. Playwright Chromium must be installed before running the integration test.
 
 ## Project documentation
 
