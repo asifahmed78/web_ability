@@ -34,7 +34,14 @@ export interface JourneyReport {
   steps: StepResult[];
 }
 
-function reportUrl(value: string): string {\n  const url = new URL(value);\n  url.search = "";\n  url.hash = "";\n  return url.toString();\n}\n\nasync function executeStep(page: Page, journey: Journey, step: JourneyStep): Promise<void> {
+function reportUrl(value: string): string {
+  const url = new URL(value);
+  url.search = "";
+  url.hash = "";
+  return url.toString();
+}
+
+async function executeStep(page: Page, journey: Journey, step: JourneyStep): Promise<void> {
   const timeout = journey.timeoutMs;
   switch (step.type) {
     case "goto": {
