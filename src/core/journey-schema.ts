@@ -15,8 +15,8 @@ export const journeySchema = z.object({
     try {
       const url = new URL(value);
       const localHosts = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
-      if (!["http:", "https:"].includes(url.protocol) || !localHosts.has(url.hostname) || url.username || url.password) {
-        context.addIssue({ code: "custom", message: "For this early release, baseUrl must use HTTP(S) on localhost, 127.0.0.1, or ::1 and must not contain credentials." });
+      if (!["http:", "https:"].includes(url.protocol) || !localHosts.has(url.hostname) || url.username || url.password || url.search || url.hash) {
+        context.addIssue({ code: "custom", message: "For this early release, baseUrl must use HTTP(S) on localhost, 127.0.0.1, or ::1 must not contain credentials, query parameters, or fragments." });
       }
     } catch {
       context.addIssue({ code: "custom", message: "baseUrl must be a valid URL." });
