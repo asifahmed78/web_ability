@@ -7,6 +7,7 @@ const journeyStep = z.discriminatedUnion("type", [
   z.object({ type: z.literal("fill"), name: z.string().min(1).max(100), selector, value: z.string().max(2_000) }),
   z.object({ type: z.literal("press"), name: z.string().min(1).max(100), selector, key: z.enum(["Tab", "Enter", "Escape", "Space", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"]) }),
   z.object({ type: z.literal("expect-visible"), name: z.string().min(1).max(100), selector }),
+  z.object({ type: z.literal("expect-focused"), name: z.string().min(1).max(100), selector }),
 ]);
 
 export const journeySchema = z.object({
@@ -16,7 +17,7 @@ export const journeySchema = z.object({
       const url = new URL(value);
       const localHosts = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
       if (!["http:", "https:"].includes(url.protocol) || !localHosts.has(url.hostname) || url.username || url.password || url.search || url.hash) {
-        context.addIssue({ code: "custom", message: "For this early release, baseUrl must use HTTP(S) on localhost, 127.0.0.1, or ::1 must not contain credentials, query parameters, or fragments." });
+        context.addIssue({ code: "custom", message: "For this early release, baseUrl must use HTTP(S) on localhost, 127.0.0.1, or ::1 and must not contain credentials, query parameters, or fragments." });
       }
     } catch {
       context.addIssue({ code: "custom", message: "baseUrl must be a valid URL." });
