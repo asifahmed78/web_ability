@@ -34,7 +34,7 @@ export interface JourneyReport {
   steps: StepResult[];
 }
 
-async function executeStep(page: Page, journey: Journey, step: JourneyStep): Promise<void> {
+function reportUrl(value: string): string {\n  const url = new URL(value);\n  url.search = "";\n  url.hash = "";\n  return url.toString();\n}\n\nasync function executeStep(page: Page, journey: Journey, step: JourneyStep): Promise<void> {
   const timeout = journey.timeoutMs;
   switch (step.type) {
     case "goto": {
@@ -104,7 +104,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
           name: step.name,
           type: step.type,
           status: "passed",
-          url: page.url(),
+          url: reportUrl(page.url()),
           durationMs: Date.now() - stepStarted,
           ...scan,
         });
@@ -113,7 +113,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
           name: step.name,
           type: step.type,
           status: "failed",
-          url: page.url() || null,
+          url: page.url() ? reportUrl(page.url()) : null,
           durationMs: Date.now() - stepStarted,
           violations: [],
           manualReview: [],
