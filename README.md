@@ -1,6 +1,6 @@
 # WebAbility
 
-**WebAbility is an open-source, journey-first accessibility testing tool.** It runs browser journeys against a local website and connects axe-core findings to the exact task step where they appear.
+**WebAbility is a journey-first accessibility testing tool.** It runs browser journeys against a local website and connects axe-core findings to the exact task step where they appear.
 
 > **Status: early development.** The repository includes a local CLI runner, validated journey format, Playwright execution, axe-core scans, JSON and HTML reports, keyboard focus assertions, a runnable demo fixture, integration tests, and CI checks. The runner is deliberately local-only. It is not a hosted scanner, a WCAG certification tool, or a replacement for manual testing.
 
@@ -93,4 +93,4 @@ Tests include schema validation, a real Chromium keyboard-focus journey, axe fin
 
 ## License
 
-No license has been selected yet. Until a license file is added, do not assume the code is available for unrestricted reuse.
+WebAbility is released under the [MIT License](LICENSE).
