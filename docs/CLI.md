@@ -6,18 +6,28 @@ The first CLI release runs a declared browser journey against a local developmen
 
 - Node.js 20 or newer
 - npm
-- A local website you own or are authorized to test
-- Chromium installed for Playwright: `npx playwright install chromium`
+- Chromium installed for Playwright
 
-## Install and run
+## Install and run the bundled demo
 
 ```bash
 npm install
 npx playwright install chromium
+```
+
+Start the fixture in terminal 1:
+
+```bash
+npm run fixture
+```
+
+Run the journey in terminal 2:
+
+```bash
 npm run webability -- run examples/checkout.journey.json --out report.json
 ```
 
-Start your local application separately before running the example. The example expects a checkout fixture at `http://127.0.0.1:3000`; it is a template, not a live target.
+The fixture intentionally contains an icon-only submit button without an accessible name so the scanner has a known issue to report.
 
 ## Journey format
 
@@ -37,9 +47,9 @@ The schema limits journeys to 30 steps and timeouts to 30 seconds. Selectors use
 
 ## Reports and exit codes
 
-The optional `--out` flag writes a versioned JSON report containing the journey, step status, URL, duration, axe rule IDs, impact, help links, target selectors, and failure summaries.
+The optional `--out` flag writes a versioned JSON report containing the journey, step status, URL, duration, axe rule IDs, impact, help links, target selectors, and failure summaries. Axe incomplete checks are kept separate as items requiring manual review.
 
-The command exits non-zero when a step fails or axe reports a violation. A completed run with zero automated findings is not proof of accessibility or WCAG conformance. Axe incomplete results and manual checks remain important; broader keyboard and assistive-technology testing is still required.
+The command exits non-zero when a step fails or axe reports a violation. A completed run with zero automated findings is not proof of accessibility or WCAG conformance. Manual keyboard, screen-reader, and assistive-technology testing remains necessary.
 
 ## Safety boundary in this release
 
