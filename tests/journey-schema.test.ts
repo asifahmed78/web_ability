@@ -61,7 +61,7 @@ test("rejects journeys with too many steps", () => {
 test("runs a keyboard journey, detects an axe issue, and renders safe HTML", async () => {
   const server = createServer((_request, response) => {
     response.writeHead(200, { "content-type": "text/html; charset=utf-8" });
-    response.end(`<!doctype html><html lang="en"><head><title>Keyboard fixture</title></head><body><main><h1>Checkout</h1><label for="email">Email</label><input id="email" type="email"><button type="submit" aria-label="">Continue</button></main></body></html>`);
+    response.end(`<!doctype html><html lang="en"><head><title>Keyboard fixture</title></head><body><main><h1>Checkout</h1><label for="email">Email</label><input id="email" type="email"><button type="submit" aria-label=""><svg aria-hidden="true" viewBox="0 0 10 10"><path d="M0 0h10v10H0z"/></svg></button></main></body></html>`);
   });
   await new Promise<void>((resolve, reject) => {
     server.once("error", reject);
