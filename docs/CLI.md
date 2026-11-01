@@ -1,6 +1,6 @@
 # WebAbility CLI
 
-The first CLI release runs a declared browser journey against a local development site and checks the page with axe-core after each step.
+The CLI runs a declared browser journey against a local development site and checks the page with axe-core after each step. It can write both machine-readable JSON and a shareable HTML report.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ npm run fixture
 Run the journey in terminal 2:
 
 ```bash
-npm run webability -- run examples/checkout.journey.json --out report.json
+npm run webability -- run examples/checkout.journey.json --out report.json --html report.html
 ```
 
 The fixture intentionally contains an icon-only submit button without an accessible name so the scanner has a known issue to report.
@@ -42,12 +42,19 @@ Supported actions:
 | `fill` | `name`, `selector`, `value` | Fill a form control |
 | `press` | `name`, `selector`, `key` | Send an allowlisted keyboard key |
 | `expect-visible` | `name`, `selector` | Wait for an element to become visible |
+| `expect-focused` | `name`, `selector` | Assert that the element is the active keyboard focus target |
+
+For a keyboard path, use `press` to send Tab or Enter, then `expect-focused` to assert which element received focus. This verifies a specific focus transition; it does not prove that every keyboard interaction or assistive-technology experience is correct.
 
 The schema limits journeys to 30 steps and timeouts to 30 seconds. Selectors use Playwright locator syntax. Avoid putting real credentials or personal data in journey files.
 
 ## Reports and exit codes
 
-The optional `--out` flag writes a versioned JSON report containing the journey, step status, URL, duration, axe rule IDs, impact, help links, target selectors, and failure summaries. Axe incomplete checks are kept separate as items requiring manual review.
+- `--out report.json` writes a versioned JSON report for CI processing.
+- `--html report.html` writes a standalone HTML report for people reviewing a run.
+- Both flags can be used together.
+
+Reports include step status, URL, duration, axe rule IDs, impact, help links, target selectors, and failure summaries. Axe incomplete checks are kept separate as items requiring manual review. Run status is `passed`, `failed` (a journey step failed), or `issues-found` (steps completed but axe found violations).
 
 The command exits non-zero when a step fails or axe reports a violation. A completed run with zero automated findings is not proof of accessibility or WCAG conformance. Manual keyboard, screen-reader, and assistive-technology testing remains necessary.
 
