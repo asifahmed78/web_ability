@@ -2,10 +2,11 @@ import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { ZodError } from "zod";
 import { parseJourney } from "./core/journey-schema";
+import { renderHtmlReport } from "./core/html-report";
 import { runJourney } from "./core/run-journey";
 
 function usage(): never {
-  console.error("Usage: npm run webability -- run <journey.json> [--out <report.json>]");
+  console.error("Usage: npm run webability -- run <journey.json> [--out <report.json>] [--html <report.html>]");
   process.exit(2);
 }
 
@@ -14,9 +15,13 @@ async function main(): Promise<void> {
   if (command !== "run" || !journeyPath) usage();
 
   let outputPath: string | undefined;
+  let htmlPath: string | undefined;
   for (let index = 0; index < args.length; index += 1) {
     if (args[index] === "--out" && args[index + 1]) {
       outputPath = args[index + 1];
+      index += 1;
+    } else if (args[index] === "--html" && args[index + 1]) {
+      htmlPath = args[index + 1];
       index += 1;
     } else {
       usage();
@@ -32,12 +37,8 @@ async function main(): Promise<void> {
     for (const step of report.steps) {
       const icon = step.status === "passed" ? "✓" : "✗";
       console.log(`${icon} ${step.name} (${step.durationMs}ms)`);
-      for (const finding of step.violations) {
-        console.log(`  [${finding.impact ?? "unknown"}] ${finding.id}: ${finding.help}`);
-      }
-      for (const item of step.manualReview) {
-        console.log(`  [manual review] ${item.id}: ${item.help}`);
-      }
+      for (const finding of step.violations) console.log(`  [${finding.impact ?? "unknown"}] ${finding.id}: ${finding.help}`);
+      for (const item of step.manualReview) console.log(`  [manual review] ${item.id}: ${item.help}`);
       if (step.error) console.error(`  ${step.error}`);
     }
 
@@ -45,9 +46,13 @@ async function main(): Promise<void> {
       await writeFile(resolve(outputPath), `${JSON.stringify(report, null, 2)}\n`, "utf8");
       console.log(`\nJSON report written to ${resolve(outputPath)}`);
     }
+    if (htmlPath) {
+      await writeFile(resolve(htmlPath), renderHtmlReport(report), "utf8");
+      console.log(`HTML report written to ${resolve(htmlPath)}`);
+    }
 
     console.log(`\n${report.summary.passedSteps}/${report.summary.steps} steps passed · ${report.summary.violations} accessibility rule violations · ${report.summary.manualReview} items need manual review`);
-    if (report.status === "failed" || report.summary.violations > 0) process.exitCode = 1;
+    if (report.status !== "passed") process.exitCode = 1;
   } catch (error) {
     if (error instanceof ZodError) {
       console.error("Invalid journey file:");
