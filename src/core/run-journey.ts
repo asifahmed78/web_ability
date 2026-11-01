@@ -29,7 +29,7 @@ export interface JourneyReport {
   baseUrl: string;
   startedAt: string;
   durationMs: number;
-  status: "passed" | "failed";
+  status: "passed" | "failed" | "issues-found";
   summary: { steps: number; passedSteps: number; failedSteps: number; violations: number; manualReview: number };
   steps: StepResult[];
 }
@@ -64,6 +64,13 @@ async function executeStep(page: Page, journey: Journey, step: JourneyStep): Pro
     case "expect-visible":
       await page.locator(step.selector).waitFor({ state: "visible", timeout });
       break;
+    case "expect-focused": {
+      const target = page.locator(step.selector);
+      await target.waitFor({ state: "visible", timeout });
+      const focused = await target.evaluate((element) => element === document.activeElement);
+      if (!focused) throw new Error(`Expected ${step.selector} to have keyboard focus.`);
+      break;
+    }
   }
 }
 
@@ -144,7 +151,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
     baseUrl: journey.baseUrl,
     startedAt,
     durationMs: Date.now() - started,
-    status: failedSteps > 0 ? "failed" : "passed",
+    status: failedSteps > 0 ? "failed" : violations > 0 ? "issues-found" : "passed",
     summary: {
       steps: steps.length,
       passedSteps: steps.length - failedSteps,
