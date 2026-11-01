@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const steps = [
   { number: "01", title: "Define a journey", description: "Describe the task a person needs to complete with a small, validated JSON file." },
   { number: "02", title: "Run it locally", description: "Replay browser actions in Chromium and inspect the page after each meaningful step." },
@@ -9,7 +11,7 @@ export default function Home() {
     <main>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <header className="site-header">
-        <a className="wordmark" href="/" aria-label="WebAbility home"><span className="brand-mark" aria-hidden="true">W</span>WebAbility</a>
+        <Link className="wordmark" href="/" aria-label="WebAbility home"><span className="brand-mark" aria-hidden="true">W</span>WebAbility</Link>
         <nav aria-label="Main navigation">
           <a href="#approach">Approach</a>
           <a href="#quickstart">Quick start</a>
@@ -74,7 +76,7 @@ export default function Home() {
         <a className="button light" href="https://github.com/asifahmed78/web_ability/blob/main/docs/ROADMAP.md">Read the roadmap <span aria-hidden="true">↗</span></a>
       </section>
       <footer className="site-footer">
-        <a className="wordmark" href="/"><span className="brand-mark" aria-hidden="true">W</span>WebAbility</a>
+        <Link className="wordmark" href="/"><span className="brand-mark" aria-hidden="true">W</span>WebAbility</Link>
         <p>Make important journeys more accessible.</p>
         <a href="https://github.com/asifahmed78/web_ability">Open source on GitHub <span aria-hidden="true">↗</span></a>
       </footer>
