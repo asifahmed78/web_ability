@@ -18,6 +18,7 @@ export interface StepResult {
   url: string | null;
   durationMs: number;
   violations: Finding[];
+  manualReview: Finding[];
   error?: string;
 }
 
@@ -29,7 +30,7 @@ export interface JourneyReport {
   startedAt: string;
   durationMs: number;
   status: "passed" | "failed";
-  summary: { steps: number; passedSteps: number; failedSteps: number; violations: number };
+  summary: { steps: number; passedSteps: number; failedSteps: number; violations: number; manualReview: number };
   steps: StepResult[];
 }
 
@@ -59,22 +60,27 @@ async function executeStep(page: Page, journey: Journey, step: JourneyStep): Pro
   }
 }
 
-async function scanPage(page: Page): Promise<Finding[]> {
+async function scanPage(page: Page): Promise<{ violations: Finding[]; manualReview: Finding[] }> {
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
 
-  return results.violations.map((violation) => ({
-    id: violation.id,
-    impact: violation.impact ?? null,
-    help: violation.help,
-    helpUrl: violation.helpUrl,
-    description: violation.description,
-    nodes: violation.nodes.map((node) => ({
+  const normalize = (items: typeof results.violations): Finding[] => items.map((item) => ({
+    id: item.id,
+    impact: item.impact ?? null,
+    help: item.help,
+    helpUrl: item.helpUrl,
+    description: item.description,
+    nodes: item.nodes.map((node) => ({
       target: node.target.map(String),
       summary: node.failureSummary ?? null,
     })),
   }));
+
+  return {
+    violations: normalize(results.violations),
+    manualReview: normalize(results.incomplete),
+  };
 }
 
 export async function runJourney(journey: Journey): Promise<JourneyReport> {
@@ -91,14 +97,16 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
       const stepStarted = Date.now();
       try {
         await executeStep(page, journey, step);
-        const violations = journey.scanAfterEachStep ? await scanPage(page) : [];
+        const scan = journey.scanAfterEachStep
+          ? await scanPage(page)
+          : { violations: [], manualReview: [] };
         steps.push({
           name: step.name,
           type: step.type,
           status: "passed",
           url: page.url(),
           durationMs: Date.now() - stepStarted,
-          violations,
+          ...scan,
         });
       } catch (error) {
         steps.push({
@@ -108,6 +116,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
           url: page.url() || null,
           durationMs: Date.now() - stepStarted,
           violations: [],
+          manualReview: [],
           error: error instanceof Error ? error.message : "Unknown step error",
         });
         break;
@@ -119,6 +128,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
 
   const failedSteps = steps.filter((step) => step.status === "failed").length;
   const violations = steps.reduce((total, step) => total + step.violations.length, 0);
+  const manualReview = steps.reduce((total, step) => total + step.manualReview.length, 0);
 
   return {
     tool: "webability",
@@ -133,6 +143,7 @@ export async function runJourney(journey: Journey): Promise<JourneyReport> {
       passedSteps: steps.length - failedSteps,
       failedSteps,
       violations,
+      manualReview,
     },
     steps,
   };
