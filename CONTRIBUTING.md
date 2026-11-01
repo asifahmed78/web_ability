@@ -11,10 +11,28 @@ WebAbility is in its foundation stage. Focused documentation improvements and sm
 1. Create a focused branch, such as `docs/journey-format` or `feat/journey-validation`.
 2. Keep changes small and explain the reason.
 3. Add or update tests when behavior changes.
-4. Run available checks before opening a pull request.
+4. Run the available checks before opening a pull request.
 5. Describe what changed, how it was tested, and any limitations.
 
-The repository has development, build, start, lint, and type-check scripts. Tests for the planned runner have not been established; do not claim they pass until they exist and have been run.
+## Local development
+
+Use Node.js 20 or newer. Install dependencies and the Playwright browser:
+
+```bash
+npm install
+npx playwright install chromium
+```
+
+Run the project checks:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+The test suite includes schema tests and a browser integration test. Chromium must be installed for the integration test to run.
 
 ## Expectations
 - Keep implemented behavior and documentation in sync.
