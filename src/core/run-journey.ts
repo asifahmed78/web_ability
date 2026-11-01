@@ -59,7 +59,8 @@ async function executeStep(page: Page, journey: Journey, step: JourneyStep): Pro
       await page.locator(step.selector).fill(step.value, { timeout });
       break;
     case "press":
-      await page.locator(step.selector).press(step.key, { timeout });
+      await page.locator(step.selector).focus({ timeout });
+      await page.keyboard.press(step.key);
       break;
     case "expect-visible":
       await page.locator(step.selector).waitFor({ state: "visible", timeout });
