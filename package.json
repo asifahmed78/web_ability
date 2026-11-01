@@ -1,18 +1,24 @@
 {
   "name": "webability",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/journey-schema.test.ts",
+    "webability": "tsx src/cli.ts",
+    "fixture": "node examples/serve-fixture.mjs"
   },
   "dependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "next": "16.1.6",
+    "playwright": "^1.56.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -22,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

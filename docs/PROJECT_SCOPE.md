@@ -1,10 +1,10 @@
 # WebAbility — Project Scope
 
 ## Product
-WebAbility is an open-source accessibility-testing project focused on checking important website journeys and reporting accessibility findings at the steps where they matter.
+WebAbility is a journey-first accessibility testing tool. It runs browser journeys and connects automated accessibility findings to the exact task step where they appear.
 
 ## Problem
-Page-level audits can list violations, but developers still need to connect issues to tasks, reproduce them, and prioritize fixes. WebAbility's intended differentiator is journey context: link findings to a named task and the step where they were observed.
+Page-level audits can list violations, but developers still need to connect issues to tasks, reproduce them, and prioritize fixes. WebAbility adds journey context: link findings to a named task and the step where they were observed.
 
 ## Intended users
 - Frontend and full-stack developers
@@ -13,31 +13,36 @@ Page-level audits can list violations, but developers still need to connect issu
 - Accessibility practitioners needing reproducible technical evidence
 
 ## First use cases
-1. Check keyboard navigation through a multi-step form.
-2. Scan pages in a product-discovery and checkout journey.
+1. Check a form journey and associate findings with each step.
+2. Scan a product-discovery and checkout journey.
 3. Record findings with the journey step and URL.
 4. Compare reports across runs after the report format stabilizes.
 
-## Initial scope
-- Typed, validated journey definitions
-- Browser runner and accessibility-engine adapter such as axe-core
-- Normalized findings with rule ID, impact, URL, step, and element evidence
-- JSON output and readable console summary
-- Unit/integration tests using local fixtures
-- Clear safety and privacy boundaries
+## Implemented in the current foundation
+- Typed, validated journey definitions with execution limits
+- Local browser runner using Playwright Chromium
+- axe-core scans after each journey step
+- Normalized violations and incomplete/manual-review results
+- Keyboard actions and explicit keyboard focus assertions
+- JSON reports for automation and standalone HTML reports for review
+- Local checkout fixture and browser integration coverage
+- CI workflow for lint, typecheck, tests, and build
 
-## Out of scope initially
-Automated WCAG/legal certification, replacing human or screen-reader testing, auto-editing source code, unsafe arbitrary remote scanning, production credentials or real transactions, AI fixes, hosted dashboards, and historical analytics before the core runner is reliable.
+## Explicitly out of scope for this early release
+Automated WCAG/legal certification, replacing human or screen-reader testing, auto-editing source code, remote scanning, production credentials or real transactions, AI fixes, hosted dashboards, and historical analytics before the core runner is reliable.
 
-## First milestone success criteria
-A sample journey validates; a local fixture runs repeatably; a known issue appears in the report; timeouts and runner failures are distinguishable from clean results; tests cover success and failure paths; docs state limitations.
+## Current limitations
+- Targets are restricted to localhost / loopback addresses and same-origin navigation.
+- Keyboard assertions verify explicitly declared focus expectations; they do not prove complete keyboard accessibility.
+- axe-core incomplete results require human review.
+- The project is an early developer tool, not a certification product.
 
-## Current status
-The repository currently contains a WebAbility landing page and planning documentation. The journey runner, browser automation, accessibility adapter, finding pipeline, report generation, and runner tests remain planned work.
+## Next milestone
+Improve failure recovery and cancellation, add CI annotations and report filtering, expand keyboard interaction coverage, and establish a stable report contract.
 
 ## Terms
 - **Journey:** named sequence of browser actions and expected outcomes.
 - **Step:** action or checkpoint in a journey.
 - **Finding:** accessibility-engine result associated with a journey step.
-- **Manual review:** result that cannot be safely classified as a confirmed violation automatically.
+- **Manual review:** incomplete automated result that requires human evaluation.
 - **Run:** one execution of a journey against a target.

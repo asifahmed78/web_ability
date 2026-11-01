@@ -1,64 +1,49 @@
-# WebAbility — Proposed Architecture
-
-> This is a target architecture. Apart from the Next.js landing page and documentation, these components are planned, not implemented.
-
-## Design goals
-- Separate journey definitions from browser automation.
-- Put accessibility-engine output behind an adapter.
-- Normalize findings into a stable report format.
-- Make runs deterministic and testable with local fixtures.
-- Treat target URLs, page content, and journey files as untrusted input.
-- Avoid storing secrets or unnecessary page content.
-
-## Proposed flow
-
-```text
-Journey definition
-  -> schema validation
-  -> run coordinator + target safety checks
-  -> browser adapter executes a step
-  -> accessibility adapter checks current page state
-  -> finding normalizer
-  -> JSON and console reports
-```
-
-## Responsibilities
-- **Journey schema:** metadata, ordered steps, allowed actions, timeouts, and assertions. Never evaluate arbitrary JavaScript from a journey file.
-- **Validation:** check required fields, action types, URL schemes, timeout bounds, and maximum step counts before browser startup.
-- **Run coordinator:** manage lifecycle, cancellation, timing, errors, and step-level findings. Distinguish failed execution from completed runs with findings.
-- **Browser adapter:** provide navigation, element interaction, keyboard input, waiting, and safe metadata access. Choose a browser automation library during implementation.
-- **Accessibility adapter:** integrate a maintained engine such as axe-core. One engine cannot detect every accessibility barrier.
-- **Finding normalizer:** retain rule identifiers and map results into consistent fields without turning uncertain results into confirmed violations.
-- **Reporters:** initially emit JSON and a concise console summary.
-
-## Illustrative finding
-
-```json
-{
-  "ruleId": "example-rule-id",
-  "impact": "serious",
-  "pageUrl": "http://127.0.0.1:3000/example",
-  "journeyName": "Example form journey",
-  "stepName": "Submit missing required fields",
-  "selector": "form button[type=submit]",
-  "evidence": [],
-  "needsManualReview": false
-}
-```
-
-This is an example target schema, not scanner output.
-
-## Error model
-Distinguish invalid journey input, unsafe targets, navigation timeouts, action failures, engine failures, report failures, successful runs with findings, and successful runs with no findings from configured checks. No automated findings does not prove a site is accessible.
-
-## Security and privacy
-- Restrict target schemes to HTTP and HTTPS.
-- Protect against SSRF, including loopback, private, link-local, and cloud metadata addresses for remote scans.
-- Re-check resolved IPs and redirects; hostname-only checks are insufficient.
-- Apply timeouts and limits for concurrency, pages, and steps.
-- Do not request production passwords or store authentication cookies in the first milestone.
-- Avoid logging form values, full HTML, screenshots, or sensitive query parameters by default.
-- Separate local execution from any future hosted scanning service.
+# WebAbility — Architecture
 
 ## Current implementation
-The current app is a small Next.js landing page. The runner, journey schema, accessibility adapter, finding pipeline, and report generation are not present yet.
+
+The repository contains a Next.js project site and an initial local journey runner.
+
+```text
+JSON journey
+  -> Zod validation
+  -> local-target restriction
+  -> Playwright Chromium
+  -> allowlisted browser actions
+  -> axe-core scan after each step
+  -> normalized violations + incomplete checks
+  -> console summary + versioned JSON report
+```
+
+## Main modules
+
+- `src/core/journey-schema.ts`: validates journey metadata, local base URLs, step types, keyboard keys, and execution limits.
+- `src/core/run-journey.ts`: executes steps in Chromium, scans with axe-core, and associates results with the step and URL.
+- `src/cli.ts`: command-line interface and JSON report writer.
+- `examples/fixture/`: intentionally small local checkout fixture.
+- `tests/`: schema validation tests.
+
+## Journey contract
+
+Supported actions are `goto`, `click`, `fill`, `press`, and `expect-visible`. Journeys are capped at 30 steps. The default step timeout is 5 seconds and the maximum is 30 seconds. Navigation is restricted to the same local origin.
+
+Arbitrary JavaScript is intentionally not part of the journey format.
+
+## Report model
+
+Reports use `schemaVersion: 1`. Each step contains its status, URL, duration, axe violations, and incomplete checks that need manual review. Findings retain rule IDs, impact, help text, help URL, description, selectors, and axe failure summaries. Form values and full HTML are not copied into the report.
+
+## Safety and privacy
+
+- Only `localhost`, `127.0.0.1`, and `::1` are accepted as initial targets.
+- Journey navigation must remain on the configured origin.
+- The runner does not accept credentials in target URLs.
+- No arbitrary JavaScript or authenticated production sessions are supported.
+- Avoid placing real personal data or secrets in journey files.
+- Do not interpret zero automated violations as proof of accessibility.
+
+The local-only boundary is deliberate. A future remote scanning service would need a separate security design for DNS resolution, SSRF, redirects, private and link-local networks, resource limits, isolation, and retention.
+
+## Known limitations
+
+The first runner is a foundation, not a complete accessibility platform. It currently uses Chromium and axe-core, does not simulate screen readers, does not prove keyboard-only task completion, and does not replace manual review. Runner and report integration tests are still being expanded.

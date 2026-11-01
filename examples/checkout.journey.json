@@ -1,0 +1,29 @@
+{
+  "name": "Example checkout journey",
+  "baseUrl": "http://127.0.0.1:3000",
+  "timeoutMs": 5000,
+  "scanAfterEachStep": true,
+  "steps": [
+    {
+      "type": "expect-visible",
+      "name": "Checkout page is ready",
+      "selector": "main"
+    },
+    {
+      "type": "fill",
+      "name": "Enter an email address",
+      "selector": "input[name=email]",
+      "value": "demo@example.test"
+    },
+    {
+      "type": "click",
+      "name": "Continue to the next step",
+      "selector": "button[type=submit]"
+    },
+    {
+      "type": "expect-visible",
+      "name": "Confirmation is visible",
+      "selector": "[data-testid=confirmation]"
+    }
+  ]
+}
