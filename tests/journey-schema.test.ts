@@ -80,7 +80,7 @@ test("runs a keyboard journey, detects an axe issue, and renders safe HTML", asy
       ],
     });
     const report = await runJourney(journey);
-    assert.equal(report.steps.length, 2);
+    assert.equal(report.steps.length, 2, JSON.stringify(report.steps));
     assert.equal(report.steps[1].status, "passed");
     assert.ok(report.steps[1].violations.some((finding) => finding.id === "button-name"));
     assert.equal(report.status, "issues-found");
